@@ -16,7 +16,7 @@ const Navbar = () => {
         <nav className="w-full flex items-center justify-between p-4 bg-gray-800 text-white">
             <div className="flex items-center justify-between w-full max-w-6xl mx-auto">
                 <Link href="/" className="text-2xl font-bold text-white">
-                    BrandLogo
+                    AI Mock Interviewer
                 </Link>
 
                 <div className="lg:hidden" onClick={toggleMobileMenu}>

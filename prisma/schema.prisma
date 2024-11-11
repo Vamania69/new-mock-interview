@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int          @id @default(autoincrement())
+  email             String       @unique
+  name              String?
+  profileSetup      Boolean      @default(false)
+  resumeUploaded    Boolean      @default(false) // Indicates if resume is uploaded
+  resumeData        String? // Store extracted resume data
+  techStack         String[]
+  yearsOfExperience Int?
+  achievements      String?
+  urls              String[]
+  interviews        Interview[]
+  answers           UserAnswer[]
+  profile           UserProfile?
+  createdAt         DateTime     @default(now())
+}
+
+model UserProfile {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique // One-to-one relation to User
+  user        User     @relation(fields: [userId], references: [id])
+  phoneNumber String?
+  bio         String?
+  linkedin    String?
+  github      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Interview {
+  id             Int        @id @default(autoincrement())
+  jobPosition    String
+  jobDescription String
+  jobExperience  String
+  createdAt      DateTime   @default(now())
+  user           User       @relation(fields: [userId], references: [id])
+  userId         Int
+  questions      Question[]
+}
+
+model Question {
+  id          Int       @id @default(autoincrement())
+  content     String
+  interview   Interview @relation(fields: [interviewId], references: [id])
+  interviewId Int
+  userAnswers String?
+  createdAt   DateTime  @default(now())
+}
+
+model UserAnswer {
+  id         Int      @id @default(autoincrement())
+  content    String
+  feedback   String?
+  rating     Int?
+  // question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  createdAt  DateTime @default(now())
+}

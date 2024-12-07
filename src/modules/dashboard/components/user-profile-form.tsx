@@ -1,9 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
-import { z } from "zod"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -15,8 +11,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 import { api } from '@/utils/axios-instance'; // Adjust the path as necessary
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
+import { useFieldArray, useForm } from "react-hook-form"
+import { z } from "zod"
 
 
 const profileFormSchema = z.object({
@@ -72,7 +72,6 @@ export function UserProfileForm({ onProfileUpdate, userId }: { onProfileUpdate: 
 
     const onSubmit = async (data: UserProfileFormValues) => {
         console.log(data, 'form data');
-
         try {
             const result = await api.post('/users/update', {
                 sessionDetails: {
@@ -161,7 +160,6 @@ export function UserProfileForm({ onProfileUpdate, userId }: { onProfileUpdate: 
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="achievements"

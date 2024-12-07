@@ -1,4 +1,5 @@
 import Navbar from "@/components/common/navbar";
+import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardLayout({
     children,
@@ -7,7 +8,6 @@ export default function DashboardLayout({
 }>) {
     return (
         <main className="">
-            <div className="mx-auto w-1/2"> <Navbar /></div>
             {children}
         </main>
 

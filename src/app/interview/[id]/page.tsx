@@ -1,9 +1,10 @@
 // InterviewChatPage.tsx
 'use client';
+import { Button } from '@/components/ui/button';
 import { useGetInterviewQuestions } from '@/modules/interview/[chat-id]/hooks/use-get-interview-questions';
 import UserInputWrapper from '@/modules/interview/[chat-id]/user-input-wrapper';
 import { api } from '@/utils/axios-instance';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface Question {
@@ -18,7 +19,7 @@ const InterviewChatPage = () => {
     const [loading, setLoading] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question>();
-
+    const router = useRouter()
     const getFollowUpQuestion = async () => {
         setLoading(true);
         try {
@@ -43,6 +44,11 @@ const InterviewChatPage = () => {
             console.error('Error fetching interview questions:', error);
         }
     };
+
+
+    const handleSubmit = () => {
+        router.push(`/interview/feedback/${id}`)
+    }
 
     useEffect(() => {
         getFollowUpQuestion()
@@ -75,11 +81,14 @@ const InterviewChatPage = () => {
                             </div>
                         )}
                     </div>
-                    <div className='mt-auto pb-4 self-center'>
+                    <div className='mt-auto pb-4 self-center w-4/5'>
                         <UserInputWrapper
                             question={currentQuestion}
                             onAnswerSubmitted={getFollowUpQuestion}
                         />
+                        {
+                            questions?.length > 8 && <Button className='mx-auto' onClick={handleSubmit}>Submit</Button>
+                        }
                     </div>
                 </>
             )}

@@ -4,7 +4,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Send } from 'lucide-react'
 import { useState } from 'react'
 import { useSendUserAnswerByQuestionId } from './hooks/use-send-user-answer-by-ques-id'
-import { useGetInterviewQuestions } from './hooks/use-get-interview-questions'
 
 export interface Question {
     id: number;
@@ -54,13 +53,13 @@ const UserInputWrapper = ({ question, onAnswerSubmitted }: UserInputWrapperProps
     };
 
     return (
-        <div className='mx-auto h-auto flex gap-x-4 justify-center items-center'>
+        <div className='mx-auto h-auto flex gap-4 justify-center items-center w-full'>
             <Textarea
                 value={userInput}
                 name='userInput'
                 placeholder='Write your answer.'
                 onChange={handleInputChange}
-                className='bg-[#999] max-h-32 text-gray-700 w-1/2 h-20 border mx-4'
+                className='bg-[#999] max-h-32 text-gray-700 h-20 border mx-4'
                 disabled={isSubmitting || !question}
             />
             <Button

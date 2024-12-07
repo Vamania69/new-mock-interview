@@ -1,5 +1,4 @@
 // /app/api/interviews/chat/initialQuestion/route.ts
-
 import prisma from "@/prisma-client";
 import { NextResponse } from "next/server";
 
@@ -11,7 +10,7 @@ async function generateInitialQuestion(jobPosition: string, jobDescription: stri
 export async function POST(req: Request) {
     try {
         const { interviewId } = await req.json();
-
+        
         if (!interviewId) {
             return NextResponse.json({ success: false, error: "Interview ID is required." }, { status: 400 });
         }

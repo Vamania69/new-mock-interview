@@ -11,28 +11,23 @@ const axiosInstance = axios.create({
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
-        // Retrieve the token from localStorage or any other secure location
         const token = localStorage.getItem('authToken'); // Replace with your token retrieval method
 
         if (token) {
-            // Set the Authorization header if token exists
             config.headers.Authorization = `Bearer ${token}`;
         }
 
         return config;
     },
     (error) => {
-        // Handle request errors
         console.error('Request error:', error);
         return Promise.reject(error);
     }
 );
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error) => {
-        // Handle response errors
         console.error('API error:', error.response ? error.response.data : error.message);
 
         // Handle specific error statuses (optional)

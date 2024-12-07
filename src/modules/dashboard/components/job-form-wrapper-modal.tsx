@@ -1,8 +1,5 @@
+'use cleint'
 import { Button } from "@/components/ui/button"
-import { User } from "@/interfaces/user"
-import { useState } from "react"
-
-
 import {
     Drawer,
     DrawerContent,
@@ -11,27 +8,20 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
-import { UserProfileForm } from "./user-profile-form"
-
-interface ISetupUserProfileWrapperProps {
-    userDetails: User | undefined
-    userId: number
-}
-
-const SetupUserProfileWrapper = ({ userDetails, userId }: ISetupUserProfileWrapperProps) => {
-    const [isOpen, setIsOpen] = useState(false); // State to manage drawer open/close
+import { useState } from 'react'
+import InterviewForm from './job-form'
+const JobFormDetailsWrapper = ({ userId }: any) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleDrawerClose = () => {
-        setIsOpen(false); // Close the drawer
+        setIsOpen(false);
     };
-
     return (
         <div>
-            <Drawer open={isOpen} onOpenChange={setIsOpen}> {/* Control drawer open state */}
+            <Drawer open={isOpen} onOpenChange={setIsOpen}>
                 <DrawerTrigger>
                     <Button
-                        disabled={!!userDetails?.profileSetup}
-                        onClick={() => setIsOpen(true)} // Open the drawer
+                        onClick={() => setIsOpen(true)}
                     >
                         Setup your profile
                     </Button>
@@ -43,13 +33,15 @@ const SetupUserProfileWrapper = ({ userDetails, userId }: ISetupUserProfileWrapp
                             <DrawerDescription>Fill in your details below.</DrawerDescription>
                         </DrawerHeader>
                         <div className="w-full mx-auto py-12 max-h-max h-full overflow-y-auto">
-                            <UserProfileForm userId={userId} onProfileUpdate={handleDrawerClose} /> {/* Pass the handler */}
-                        </div>
+                            <InterviewForm userId={userId} handleDrawer={handleDrawerClose} /></div>
                     </div>
                 </DrawerContent>
             </Drawer>
         </div>
-    );
-};
+    )
+}
 
-export default SetupUserProfileWrapper
+export default JobFormDetailsWrapper
+
+
+

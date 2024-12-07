@@ -7,7 +7,6 @@ import {
     DialogTitle
 } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
-import InterviewForm from "./job-form"
 
 export function StartInerviewModal({ isOpen, setIsopen, interviewId }: any) {
     const router = useRouter()
@@ -18,13 +17,12 @@ export function StartInerviewModal({ isOpen, setIsopen, interviewId }: any) {
         <Dialog open={isOpen} onOpenChange={setIsopen} modal>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit profile</DialogTitle>
+                    <DialogTitle>Interview Call</DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when you're done.
+                        Get Ready to start the interview, Best of Luck!!.
                     </DialogDescription>
                 </DialogHeader>
                 <div>
-                    <InterviewForm />
                 </div>
                 <Button onClick={handleClick} className="">Start your Interview.</Button>
             </DialogContent>

@@ -5,8 +5,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-    const { userId, techStack, yearsOfExperience, achievements, urls } = await req.json();
-
+    const { sessionDetails } = await req.json();
+    const { userId, techStack, yearsOfExperience, achievements, urls } = sessionDetails
     // Validate the input data
     if (!userId || !techStack || yearsOfExperience === undefined) {
         return new Response(JSON.stringify({ message: 'Invalid input data' }), { status: 400 });

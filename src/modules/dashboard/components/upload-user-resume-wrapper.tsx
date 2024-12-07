@@ -10,25 +10,35 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 import { FileUpload } from "@/components/ui/file-upload";
+import { data } from "@/constants/data";
+import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 
 interface IUploadUserResumeWrapperProps {
     userId: number;
+    userDetails: any
 }
 
-const UploadUserResumeWrapper: React.FC<IUploadUserResumeWrapperProps> = ({ userId }) => {
+const UploadUserResumeWrapper: React.FC<IUploadUserResumeWrapperProps> = ({ userId, userDetails }) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const [files, setFiles] = useState<File[]>([]);
     const handleFileUpload = (files: File[]) => {
         setFiles(files);
-        console.log(files);
     };
+    const handleSubmit = () => {
+        setIsOpen(false)
+        toast({
+            title: "File upload success",
+        })
+        console.log(data)
+    }
+    console.log(userDetails)
     return (
         <div>
             <Drawer open={isOpen} onOpenChange={setIsOpen}> {/* Control drawer open state */}
                 <DrawerTrigger>
-                    <Button onClick={() => setIsOpen(true)}>Upload Resume</Button> {/* Open the drawer */}
+                    <Button disabled={!!userDetails?.profileSetup && userDetails?.resumeUploaded} onClick={() => setIsOpen(true)}>Upload Resume</Button> {/* Open the drawer */}
                 </DrawerTrigger>
                 <DrawerContent className="overflow-y-auto h-[80%] !py-10">
                     <div className="mx-auto w-full max-w-sm">
@@ -39,7 +49,7 @@ const UploadUserResumeWrapper: React.FC<IUploadUserResumeWrapperProps> = ({ user
                         <div className="w-full mx-auto py-12 ">
                             <FileUpload onChange={handleFileUpload} />
                             <div className="mt-4">
-                                <Button onClick={() => { }} className="w-full" id="uploadBtn" variant="outline">Upload</Button> {/* Upload button */}
+                                <Button onClick={handleSubmit} className="w-full" id="uploadBtn" variant="outline">Upload</Button> {/* Upload button */}
                             </div>
                             <p id="statusMessage"></p>
                         </div>

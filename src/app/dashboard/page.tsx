@@ -6,6 +6,7 @@ import SetupUserProfileWrapper from '@/modules/dashboard/components/setup-user-p
 import UploadUserResumeWrapper from '@/modules/dashboard/components/upload-user-resume-wrapper';
 import { api } from '@/utils/axios-instance';
 import { useAuth, useUser } from '@clerk/nextjs';
+import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const Dashboard = () => {
@@ -13,6 +14,7 @@ const Dashboard = () => {
     const { user, isLoaded } = useUser()
     const [userDetails, setUserDetails] = useState<User | undefined>()
     const [userId, setUserId] = useState<number | undefined>(); // State to store user ID
+    const [resumeState, setResumeState] = useState(false)
 
     useEffect(() => {
         if (isLoaded && isSignedIn) {
@@ -28,6 +30,7 @@ const Dashboard = () => {
                     console.log('User saved to database:', response.data);
                     setUserDetails(response.data.user as User); // Now TypeScript knows 'user' exists
                     setUserId(response.data.user.id); // Store the user ID
+                    setResumeState(response.data.user.resumeUploaded)
                 } catch (error) {
                     console.error('Error saving user:', error);
                 }
@@ -38,26 +41,31 @@ const Dashboard = () => {
     }, [isLoaded, isSignedIn, user]);
 
     if (!isLoaded) {
-        return <div>Loading...</div>;
+        return <div className='h-screen flex items-center justify-center'>
+            <div>
+                <Loader2 className='' />
+
+                <span className='my-auto mx-auto'>Loading...</span></div>
+        </div>
     }
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <div className='h-screen py-12'>
             {userDetails && (
-                <div>
+                <div className='bg-muted-foreground w-4/5 mx-auto rounded-[10px] px-4 py-6 text-lg'>
                     <p>Email: {userDetails.email}</p>
                     <p>Name: {userDetails.name}</p>
                     <p>Profile Setup: {userDetails.profileSetup ? 'Yes' : 'No'}</p>
-                    <p>Resume Uploaded: {userDetails.resumeUploaded ? 'Yes' : 'No'}</p>
+                    <p>Resume Uploaded: {resumeState ? 'Yes' : 'No'}</p>
                 </div>
             )}
 
-            {userId && <SetupUserProfileWrapper userId={userId} userDetails={userDetails} />} {/* Pass userId to the wrapper */}
+            <div className='flex gap-x-12 my-12 w-3/4 mx-auto'>
+                {userId && <SetupUserProfileWrapper userId={userId} userDetails={userDetails} />} {/* Pass userId to the wrapper */}
 
-            {userId && <UploadUserResumeWrapper userId={userId} />}
+                {userId && <UploadUserResumeWrapper userId={userId} userDetails={userDetails} />}
 
-            {userId && <InterviewForm userId={userId} />}
-
+                {userId && <InterviewForm userId={userId} />}
+            </div>
         </div>
     );
 };

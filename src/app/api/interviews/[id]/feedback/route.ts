@@ -1,8 +1,37 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 import prisma from "../../../prisma-client";
 
+
 export async function POST(req: Request, { params }: { params: { id: string } }) {
+    const schema = {
+        description: "Feedback response object",
+        type: SchemaType.OBJECT,
+        properties: {
+            COMMUNICATION: {
+                type: SchemaType.INTEGER,
+                description: "Rating for communication, between 1 and 10",
+                minimum: 1,
+                maximum: 10,
+                nullable: false,
+            },
+            TECHNICAL: {
+                type: SchemaType.INTEGER,
+                description: "Rating for technical skills, between 1 and 10",
+                minimum: 1,
+                maximum: 10,
+                nullable: false,
+            },
+            OVERALL: {
+                type: SchemaType.INTEGER,
+                description: "Overall rating, between 1 and 10",
+                minimum: 1,
+                maximum: 10,
+                nullable: false,
+            },
+        },
+        required: ["COMMUNICATION", "TECHNICAL", "OVERALL"],
+    };
     const { id } = params;
     const apiKey = process.env.GEMINI_API_KEY;
 
@@ -10,8 +39,14 @@ export async function POST(req: Request, { params }: { params: { id: string } })
         return NextResponse.json({ success: false, error: 'API key not found.' }, { status: 401 });
     }
 
+
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash", generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: schema,
+        }
+    });
 
     try {
         // Fetch questions for the interview directly from the database
@@ -42,6 +77,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
 }
 
+
+
 async function generateFeedbackSummary(model: any, feedbackData: any[]) {
     const prompt = `
         You are an AI assistant providing feedback on an interview.
@@ -61,5 +98,5 @@ async function generateFeedbackSummary(model: any, feedbackData: any[]) {
     `;
 
     const aiResponse = await model.generateContent(prompt);
-    return aiResponse.response || "No summary generated.";
+    return aiResponse.response?.text() || "No summary generated.";
 }

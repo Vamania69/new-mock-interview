@@ -47,7 +47,7 @@ const InterviewChatPage = () => {
 
 
     const handleSubmit = () => {
-        router.push(`/interview/feedback/${id}`)
+        router.push(`/interview/${id}/feedback`)
     }
 
     useEffect(() => {
